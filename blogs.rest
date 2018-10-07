@@ -1,0 +1,15 @@
+@server=http://localhost:3003
+
+GET {{server}}/api/blogs HTTP/1.1
+
+###
+
+POST {{server}}/api/blogs HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Testing",
+    "author": "Alan Smithee",
+    "url": "http://127.0.0.1",
+    "likes": 42
+}

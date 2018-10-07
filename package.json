@@ -1,0 +1,28 @@
+{
+  "name": "osa4",
+  "version": "1.0.0",
+  "description": "Matin blogialusta",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "watch": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattifso/osa4.git"
+  },
+  "author": "Matti Sillanpää",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattifso/osa4/issues"
+  },
+  "homepage": "https://github.com/mattifso/osa4#readme",
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  },
+  "dependencies": {
+    "dotenv": "^6.0.0"
+  }
+}
