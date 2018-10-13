@@ -4,9 +4,9 @@
   "description": "Matin blogialusta",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node index.js",
-    "watch": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "cross-env NODE_ENV=test jest --verbose",
+    "start": "node index.js",
+    "watch": "nodemon index.js",
+    "test": "jest --verbose",
     "lint": "eslint ."
   },
   "repository": {
@@ -20,16 +20,19 @@
   },
   "homepage": "https://github.com/mattifso/osa4#readme",
   "devDependencies": {
-    "cross-env": "^5.2.0",
     "eslint": "^5.6.1",
+    "install": "^0.12.1",
     "jest": "^23.6.0",
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.4",
+    "npm": "^6.4.1",
+    "supertest": "^3.3.0"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
-    "express": "^4.16.3",
-    "mongoose": "^5.3.2"
+    "express": "^4.16.4",
+    "mongoose": "^5.3.3"
   },
   "jest": {
     "testEnvironment": "node"
