@@ -1,4 +1,4 @@
-@server=http://localhost:3003
+@server=http://localhost:3001
 
 GET {{server}}/api/blogs HTTP/1.1
 
@@ -13,3 +13,7 @@ content-type: application/json
     "url": "http://127.0.0.1",
     "likes": 42
 }
+
+###
+
+DELETE {{server}}/api/blogs/5bba1581e59947d2a4c99e6d HTTP/1.1
