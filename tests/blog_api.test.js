@@ -119,7 +119,7 @@ describe ('after a POST to /api/blogs, the response to GET /api/blogs', () => {
     const response = await api
       .get('/api/blogs')
 
-    const returnedNewBlog = response.body.filter(r => r.title === 'Most Interesting Blog in the World')    
+    const returnedNewBlog = response.body.filter(r => r.title === 'Most Interesting Blog in the World')
     expect(returnedNewBlog.length).toEqual(1)
     expect(returnedNewBlog[0].author).toEqual('Foo Bar')
     expect(returnedNewBlog[0].url).toEqual('https://localhost.com')
