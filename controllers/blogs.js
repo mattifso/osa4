@@ -35,9 +35,7 @@ blogsRouter.post('/', async (request, response) => {
     const body = request.body
     if (body.title === undefined
       || body.author === undefined
-      || body.url === undefined
-      || body.likes === undefined
-      || body.userId === undefined) {
+      || body.url === undefined) {
       return response.status(400).json({ error: 'invalid blog content' })
     }
 
