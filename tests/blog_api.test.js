@@ -4,6 +4,8 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const { usersInDb } = require('./test_helper')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const initialBlogs = [
   {
@@ -56,7 +58,7 @@ const initialBlogs = [
   }
 ]
 
-describe ('in the response to a GET to /api/blogs', () => {
+describe('in the response to a GET to /api/blogs', () => {
 
   beforeAll(async () => {
     await Blog.remove({})
@@ -102,18 +104,29 @@ const newBlog = {
   likes: 42,
 }
 
-describe ('after a POST to /api/blogs, the response to GET /api/blogs', () => {
+describe('after a POST to /api/blogs', () => {
 
+  let token
   beforeEach(async () => {
     await Blog.remove({})
     const blogObjects = initialBlogs.map(blog => new Blog(blog))
     const promiseArray = blogObjects.map(blog => blog.save())
     await Promise.all(promiseArray)
+    await User.remove({})
+    const passwordHash = await bcrypt.hash('pass', 10)
+    const user = new User({ username: 'user', password: 'pass', passwordHash: passwordHash })
+    await user.save()
+    const userForToken = {
+      username: user.username,
+      id: user._id
+    }
+    token = jwt.sign(userForToken, process.env.SECRET)
   })
 
-  test('includes the new blog', async () => {
+  test('the response to GET /api/blogs includes the new blog', async () => {
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -128,9 +141,10 @@ describe ('after a POST to /api/blogs, the response to GET /api/blogs', () => {
     expect(returnedNewBlog[0].likes).toEqual(42)
   })
 
-  test('the amount of blogs increases by one', async () => {
+  test('in the response to the response to GET /api/blogs, the amount of blogs has increased by one', async () => {
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -141,10 +155,34 @@ describe ('after a POST to /api/blogs, the response to GET /api/blogs', () => {
     expect(response.body.length).toBe(initialBlogs.length + 1)
   })
 
+  test('if the new blog in the request didn\'t have title and url set, response is 400', async () => {
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(
+        {
+          author: 'Foo Bar',
+          likes: 42,
+          url: 'www.foobar.com'
+        }
+      )
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        author: 'Foo Bar',
+        likes: 42,
+        title: 'Yada Yada'
+      })
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
 })
 
-
-describe.only('when there is initially one user at db', async () => {
+describe('when there is initially one user at db', async () => {
   beforeAll(async () => {
     await User.remove({})
     const user = new User({ username: 'root', password: 'sekret' })
@@ -167,7 +205,7 @@ describe.only('when there is initially one user at db', async () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAfterOperation = await usersInDb()
-    expect(usersAfterOperation.length).toBe(usersBeforeOperation.length+1)
+    expect(usersAfterOperation.length).toBe(usersBeforeOperation.length + 1)
     const usernames = usersAfterOperation.map(u => u.username)
     expect(usernames).toContain(newUser.username)
   })
