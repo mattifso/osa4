@@ -64,6 +64,43 @@ blogsRouter.post('/', async (request, response) => {
   }
 })
 
+
+blogsRouter.put('/:id', async (request, response) => {
+  try {
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+
+    if (!token || !decodedToken.id) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+    const body = request.body
+    if (body.title === undefined
+      || body.url === undefined) {
+      return response.status(400).json({ error: 'invalid blog content' })
+    }
+
+    const savedBlog = await Blog.findById(request.params.id)
+    if (!savedBlog) {
+      return response.status(404).json({ error: 'blog not found' })
+    }
+    savedBlog.title = body.title
+    savedBlog.url = body.url
+    savedBlog.likes = body.likes
+
+    const updatedBlog = await savedBlog.save()
+
+    response.status(200).json(Blog.format(updatedBlog))
+  } catch (exception) {
+    if (exception.name === 'JsonWebTokenError' ) {
+      response.status(401).json({ error: exception.message })
+    } else {
+      console.log(exception)
+      response.status(500).json({ error: 'internal error' })
+    }
+  }
+})
+
+
 blogsRouter.delete('/:id', async (request, response) => {
   try {
     await Blog.findByIdAndRemove(request.params.id)

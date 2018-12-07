@@ -34,6 +34,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1vb
     "userId": "5bc75406ed772a2a0de3d214"
 }
 
+###
+PUT {{server}}/api/blogs/5bcb01e6789eab4c1435d287 HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1vbmdvIiwiaWQiOiI1YmM3NTQwNmVkNzcyYTJhMGRlM2QyMTQiLCJpYXQiOjE1Mzk4MTI0NzZ9.2yr7_IdfsvKaJ4UbUE0SjuNBwy2MMlZy263J5qiHcwA
+
+{
+    "title": "Notes on Nietschze",
+    "author": "Mongo & Johnson",
+    "url": "http://127.0.0.1",
+    "likes": 102,
+    "userId": "5bc75406ed772a2a0de3d214"
+}
+
+
 
 ###
 
