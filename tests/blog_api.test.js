@@ -180,6 +180,28 @@ describe('after a POST to /api/blogs', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/)
   })
+
+  test('if the new blog in the request didn\'t define likes, they are set to 0', async () => {
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(
+        {
+          author: 'Foo Bar',
+          url: 'www.foobar.com',
+          title: 'Yada Yada'
+        }
+      )
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    const response = await api
+      .get('/api/blogs')
+
+    const returnedNewBlog = response.body.filter(r => r.title === 'Yada Yada')[0]
+    expect(returnedNewBlog.author).toEqual('Foo Bar')
+    expect(returnedNewBlog.likes).toEqual(0)
+  })
+
 })
 
 describe('when there is initially one user at db', async () => {
