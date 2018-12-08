@@ -14,7 +14,7 @@ content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1vbmdvIiwiaWQiOiI1YmM3NTQwNmVkNzcyYTJhMGRlM2QyMTQiLCJpYXQiOjE1Mzk4MTI0NzZ9.2yr7_IdfsvKaJ4UbUE0SjuNBwy2MMlZy263J5qiHcwA
 
 {
-    "title": "Notes on Penicillin",
+    "title": "Notes on Penicillin part II",
     "author": "Mongo",
     "url": "http://127.0.0.1",
     "likes": 42,
@@ -55,16 +55,15 @@ POST {{server}}/api/users HTTP/1.1
 content-type: application/json
 
 {
-    "username": "mongo",
-    "name": "Mongo from Blazing Saddles",
-    "adult": false,
+    "username": "guy6",
+    "name": "some sixth guy",
     "password": "sekret" 
 }
 
 ###
 
-DELETE {{server}}/api/blogs/5bba1581e59947d2a4c99e6d HTTP/1.1
-
+DELETE {{server}}/api/blogs/5c0beb17d3246ff32af3c309 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imd1eTYiLCJpZCI6IjVjMGJlN2IwMDQzNjA4ZTYzNjQwNjNkYyIsImlhdCI6MTU0NDI4NTI1Mn0.CSQw4feYFO-TvqkWFrGlpPt1DEMCfUn9LX00TcHmaD8
 
 ####
 
@@ -72,6 +71,6 @@ POST {{server}}/api/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "mongo",
+    "username": "guy6",
     "password": "sekret"
 }

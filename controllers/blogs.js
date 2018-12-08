@@ -17,10 +17,12 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
   try {
+    if (!request.token) {
+      return response.status(401).json({ error: 'token missing' })
+    }
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-    if (!request.token || !decodedToken.id) {
-      return response.status(401).json({ error: 'token missing or invalid' })
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: 'token invalid' })
     }
 
     const body = request.body
@@ -46,7 +48,7 @@ blogsRouter.post('/', async (request, response) => {
 
     response.status(201).json(Blog.format(blog))
   } catch (exception) {
-    if (exception.name === 'JsonWebTokenError' ) {
+    if (exception.name === 'JsonWebTokenError') {
       response.status(401).json({ error: exception.message })
     } else {
       console.log(exception)
@@ -81,7 +83,7 @@ blogsRouter.put('/:id', async (request, response) => {
 
     response.status(200).json(Blog.format(updatedBlog))
   } catch (exception) {
-    if (exception.name === 'JsonWebTokenError' ) {
+    if (exception.name === 'JsonWebTokenError') {
       response.status(401).json({ error: exception.message })
     } else {
       console.log(exception)
@@ -93,6 +95,22 @@ blogsRouter.put('/:id', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
   try {
+    if (!request.token) {
+      return response.status(401).json({ error: 'token missing' })
+    }
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: 'token invalid' })
+    }
+
+    const blog = await Blog.findById(request.params.id)
+    if (!blog) {
+      return response.status(404).json({ error: 'blog not found' })
+    }
+    if (blog.user.toString() !== decodedToken.id) {
+      return response.status(403).json({ error: 'not allowed to delete other users\' entries' })
+    }
+
     await Blog.findByIdAndRemove(request.params.id)
     response.status(204).end()
   } catch (exception) {
