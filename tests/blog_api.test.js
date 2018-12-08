@@ -3,7 +3,7 @@ const { app, server } = require('../index')
 const api = supertest(app)
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const { usersInDb } = require('./test_helper')
+const { usersInDb, blogsInDb } = require('./test_helper')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -122,6 +122,24 @@ describe('after a POST to /api/blogs', () => {
     }
     token = jwt.sign(userForToken, process.env.SECRET)
   })
+
+  test('the DB includes the new blog', async () => {
+    const blogsBeforeAdding = await blogsInDb()
+    expect(blogsBeforeAdding.filter(r => r.title === 'Most Interesting Blog in the World')).toBeUndefined
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    const blogsAfterAdding = await blogsInDb()
+    const newBlogInDb = blogsAfterAdding.filter(r => r.title === 'Most Interesting Blog in the World')
+    expect(newBlogInDb[0].author).toEqual('Foo Bar')
+    expect(newBlogInDb[0].url).toEqual('https://localhost.com')
+    expect(newBlogInDb[0].likes).toEqual(42)
+    expect(blogsAfterAdding.length).toEqual(blogsBeforeAdding.length + 1)
+  })
+
 
   test('the response to GET /api/blogs includes the new blog', async () => {
     await api
@@ -253,7 +271,6 @@ describe('when there is initially one user at db', async () => {
     expect(usersAfterOperation.length).toBe(usersBeforeOperation.length)
   })
 })
-
 
 afterAll(() => {
   server.close()
