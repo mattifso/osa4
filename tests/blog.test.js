@@ -73,3 +73,25 @@ describe('total likes', () => {
     expect(listHelper.totalLikes([])).toBe(0)
   })
 })
+
+describe('the author with most likes', () => {
+  test('in a list with many blogs is the one with most likes in total', () => {
+    expect(listHelper.mostLikes(blogs)).toEqual({ author: 'Edsger W. Dijkstra', likes: 17 })
+  })
+})
+
+describe('the author with most blogs', () => {
+  test('in a list with many blogs is the author with most blogs in total', () => {
+    expect(listHelper.mostBlogs(blogs)).toEqual({ author: 'Robert C. Martin', blogs: 3 })
+  })
+})
+
+describe('the favorite blog', () => {
+  test('in a list with many blogs is the blog with most likes', () => {
+    expect(listHelper.favoriteBlog(blogs)).toEqual({
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      likes: 12
+    })
+  })
+})
