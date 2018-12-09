@@ -107,7 +107,7 @@ blogsRouter.delete('/:id', async (request, response) => {
     if (!blog) {
       return response.status(404).json({ error: 'blog not found' })
     }
-    if (blog.user.toString() !== decodedToken.id) {
+    if (blog.user && (blog.user.toString() !== decodedToken.id)) {
       return response.status(403).json({ error: 'not allowed to delete other users\' entries' })
     }
 
